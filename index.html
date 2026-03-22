@@ -2,7 +2,7 @@
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Rate Card">
@@ -242,11 +242,42 @@ tbody tr.paid-flash{animation:flash-green 0.6s ease-out;}
   .form-grid{grid-template-columns:1fr 1fr;}
   .charts-row{grid-template-columns:1fr;}
   .scenarios-grid{grid-template-columns:1fr;}
-  thead{display:none;}
-  tbody td{display:block;padding:5px 16px;}
-  tbody td:first-child{padding-top:14px;}
-  tbody td:last-child{padding-bottom:14px;}
   .opt-stat{border-right:none;border-bottom:1px solid var(--border);}
+  .header-actions{gap:6px;}
+  .btn-icon{font-size:12px;padding:0 10px;}
+
+  /* Tabel -> Cards pe mobile */
+  thead{display:none;}
+  tbody tr{display:block;background:var(--surface2);border-radius:var(--r-sm);margin:8px 16px;border:1px solid var(--border);border-bottom:1px solid var(--border) !important;}
+  tbody tr.hl{background:rgba(255,159,10,0.08);}
+  tbody tr.done{opacity:0.4;}
+  tbody td{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;}
+  tbody td:last-child{border-bottom:none;}
+  tbody td::before{content:attr(data-label);font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0;margin-right:12px;}
+  tbody td.td-no-label::before{display:none;}
+  .td-desc{font-size:14px !important;font-weight:700 !important;}
+  .prog-wrap{flex:1;justify-content:flex-end;}
+  .prog-bar{min-width:80px;}
+  .pay-btn-wrap{flex-direction:column;align-items:stretch;gap:10px;}
+  .pay-actions{justify-content:stretch;}
+  .btn-pay{justify-content:center;}
+  .overall-progress{flex-wrap:wrap;gap:8px;}
+  .op-detail{width:100%;text-align:center;}
+}
+
+/* Fix scroll lateral si safe area iPhone */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+.app {
+  overflow-x: hidden;
+}
+/* Safe area pentru iPhone cu notch */
+body {
+  padding-left: max(24px, env(safe-area-inset-left));
+  padding-right: max(24px, env(safe-area-inset-right));
+  padding-bottom: max(100px, env(safe-area-inset-bottom));
 }
 </style>
 </head>
@@ -848,14 +879,14 @@ function render(){
     const badge=fin?`<span class="badge finalizat">Finalizat</span>`:hl?`<span class="badge inchide">De închis</span>`:`<span class="badge activ">Activ</span>`;
     const dataFin=getDataFinalizare(r);
     return`<tr class="${trCls}">
-      <td class="td-desc"><span class="editable" data-id="${r.id}" data-field="desc">${r.desc}</span><span class="edit-hint">✎</span></td>
-      <td class="td-nr"><span class="editable" data-id="${r.id}" data-field="nr">${r.achitate}/${r.total}</span></td>
-      <td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill ${progCls}" style="width:${pct}%"></div></div><span class="prog-pct">${pct}%</span></div></td>
-      <td class="td-mono"><span class="editable" data-id="${r.id}" data-field="rata">${r.rata.toLocaleString('ro-RO',{minimumFractionDigits:2,maximumFractionDigits:2})} RON</span></td>
-      <td class="td-ramas"><span class="editable" data-id="${r.id}" data-field="ramas">${r.ramas.toLocaleString('ro-RO',{minimumFractionDigits:2,maximumFractionDigits:2})} RON</span></td>
-      <td class="td-date">${dataFin}</td>
-      <td>${badge}</td>
-      <td><button class="btn-del" onclick="sterge(${r.id})">✕</button></td>
+      <td class="td-desc td-no-label"><span class="editable" data-id="${r.id}" data-field="desc">${r.desc}</span><span class="edit-hint">✎</span></td>
+      <td class="td-nr" data-label="Nr. Rată"><span class="editable" data-id="${r.id}" data-field="nr">${r.achitate}/${r.total}</span></td>
+      <td data-label="Progres"><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill ${progCls}" style="width:${pct}%"></div></div><span class="prog-pct">${pct}%</span></div></td>
+      <td class="td-mono" data-label="Rată lunară"><span class="editable" data-id="${r.id}" data-field="rata">${r.rata.toLocaleString('ro-RO',{minimumFractionDigits:2,maximumFractionDigits:2})} RON</span></td>
+      <td class="td-ramas" data-label="Rămas"><span class="editable" data-id="${r.id}" data-field="ramas">${r.ramas.toLocaleString('ro-RO',{minimumFractionDigits:2,maximumFractionDigits:2})} RON</span></td>
+      <td class="td-date" data-label="Finalizare">${dataFin}</td>
+      <td data-label="Status">${badge}</td>
+      <td class="td-no-label"><button class="btn-del" onclick="sterge(${r.id})">✕</button></td>
     </tr>`;
   }).join('');
 
